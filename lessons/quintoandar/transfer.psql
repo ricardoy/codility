@@ -1,0 +1,5 @@
+select b.recipient from (
+	select a.recipient, a.amount from (
+		select *, row_number() over (partition by recipient order by amount desc) as row_id from transfers
+	) as a where a.row_id < 4 order by a.recipient
+) as b group by recipient having sum(amount) >= 1024;
